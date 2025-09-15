@@ -1,0 +1,52 @@
+
+
+Main --------------
+
+create array called numbers
+initialize an int called count
+
+for each index in numbers set value to zero
+end for
+
+for each number in numbers scan output of terminal
+if scan is 0 end for
+end for loop
+
+if count is 0 
+print nothing to compute and return 0 to main
+
+print average of even digits with,calc_averages passthrough
+print average of odd digits with, calc_averages passthrough
+
+return 0 in program
+
+
+Main End ----------------------
+
+
+
+
+calc_averages -------------------- return float
+
+passthrough numbers and opperation
+
+make int called count = 0
+make int opperationc_count = 0
+make int sum = 0
+
+if opperation is even 
+    while number at index count does not equal 0
+        and number at index is module 2 equal to 0
+            add to sum
+            increase operation count by one
+        close
+        count ++
+    close
+close
+else if the opperation is odd
+    same logic as if opperation was even with the only change being module 2 does not equal 0
+
+
+return the casted type of (float sum ) devided by opperation count
+
+calc_averages ------ end
