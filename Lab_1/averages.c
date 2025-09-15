@@ -47,9 +47,9 @@ void get_even_odd_sums(int numbers[], int count, int even_sums[], int *even_coun
 
 
     }
-    printf("Even Sums: %d, Odd Sums: %d", even_tally, odd_tally);
-    printf("\n");
-    printf("Even Count: %d, Odd Count: %d", *even_count, *odd_count);
+    // printf("Even Sums: %d, Odd Sums: %d", even_tally, odd_tally);
+    // printf("\n");
+    // printf("Even Count: %d, Odd Count: %d", *even_count, *odd_count);
 
 
     
@@ -58,7 +58,7 @@ void get_even_odd_sums(int numbers[], int count, int even_sums[], int *even_coun
 void take_average(int arr[], int size)
 {
     if(size == 0) {
-        printf("No elements to compute average.\n");
+        // printf("No elements to compute average.\n");
         return;
     }
     int sum = 0;
@@ -66,7 +66,7 @@ void take_average(int arr[], int size)
         sum += arr[i];
     }
     double average = (double)sum / size;
-    printf("Average: %.2f\n", average);
+    printf("%.2f\n", average);
 }
 
 void set_array(int arr[], int size, int value)
@@ -99,28 +99,26 @@ int main() {
     set_array(even_sums, 100, 0);
     set_array(odd_sums, 100, 0);
 
-    
-
     count = get_input(numbers);
 
-    print_array(numbers, count);
-
+    //print_array(numbers, count);
 
     get_even_odd_sums(numbers, count, even_sums, &even_count, odd_sums, &odd_count);
-
-    printf("\n");
     
-    print_array(even_sums, even_count);
-    print_array(odd_sums, odd_count);
+    //print_array(even_sums, even_count);
+    //print_array(odd_sums, odd_count);
 
-    printf("tally of array count: %d\n", even_count);
-
-    take_average(even_sums, even_count);
-    take_average(odd_sums, odd_count);
     
     if(count == 0) {
         printf("There is no average to compute.\n");
         return 1;
+    }
+    else
+    {
+        printf("Average of input values whose digits sum up to an even number:");
+        take_average(even_sums, even_count);
+        printf("Average of input values whose digits sum up to an odd number:");
+        take_average(odd_sums, odd_count);
     }
 
     return 0;
