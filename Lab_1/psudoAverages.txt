@@ -2,51 +2,75 @@
 
 Main --------------
 
-create array called numbers
-initialize an int called count
+create 3 arrays of size 100
+create counts for each
 
-for each index in numbers set value to zero
-end for
+set array values to zero since c doesnt do that automatically
 
-for each number in numbers scan output of terminal
-if scan is 0 end for
-end for loop
+set count equal to numbers gathered from data
 
-if count is 0 
-print nothing to compute and return 0 to main
+get_even_odd_sums() // organize data to requirements
 
-print average of even digits with,calc_averages passthrough
-print average of odd digits with, calc_averages passthrough
+if count / no data
+print there is no average
+
+else
+ print averages for each depending on availability
 
 return 0 in program
 
 
 Main End ----------------------
 
+int get_output(array to be added to)
+
+count is zero
+for each number typed into console, add to array and increment count
+
+return count for main.
+
+end------------------------
+
+void get_even_odd_sums(gather relevent data from main array, its count, and the other two arrays, add a REFERENCE to their counts to manage later)
+
+for each number in numbers
+    set sum to zero
+    set reference to number
+    if reference is negative make array at i negative.
+    while number is over 0
+        keep adding each part of number to itself
+    if sum is even_count
+        add to even array 
+        increment apporpriate count
+    if odd
+        do the same
+
+return nothing
+
+end--------------------------------
+
+void take average(takes array and its size)
+
+    if size is zero, return
+
+    iterate through array adding all values (sum up)
+
+    double average = (double)sum / size         (average basically)
+    print to console the values
+
+end ------------------------
+
+void set_array(array, size, and value)
+
+helper for loop that just makes array indexs equal to a value defined
+
+end ------------------------------
+
+void print_array(arrary, size)
+
+helper for loop yo display contents of array
+
+end ------------------
 
 
 
-calc_averages -------------------- return float
-
-passthrough numbers and opperation
-
-make int called count = 0
-make int opperationc_count = 0
-make int sum = 0
-
-if opperation is even 
-    while number at index count does not equal 0
-        and number at index is module 2 equal to 0
-            add to sum
-            increase operation count by one
-        close
-        count ++
-    close
-close
-else if the opperation is odd
-    same logic as if opperation was even with the only change being module 2 does not equal 0
-
-
-return the casted type of (float sum ) devided by opperation count
-
-calc_averages ------ end

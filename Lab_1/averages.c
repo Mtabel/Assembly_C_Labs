@@ -115,10 +115,16 @@ int main() {
     }
     else
     {
-        printf("Average of input values whose digits sum up to an even number:");
-        take_average(even_sums, even_count);
-        printf("Average of input values whose digits sum up to an odd number:");
-        take_average(odd_sums, odd_count);
+        if(even_count != 0)
+        {
+            printf("Average of input values whose digits sum up to an even number:");
+            take_average(even_sums, even_count);
+        }
+        if(odd_count != 0)
+        {
+            printf("Average of input values whose digits sum up to an odd number:");
+            take_average(odd_sums, odd_count);
+        }
     }
 
     return 0;
