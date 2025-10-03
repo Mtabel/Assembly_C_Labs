@@ -1,10 +1,26 @@
 #include <stdio.h>
+char* get_suffix(int n){
+    int last_two = n % 100;
+    if (last_two >= 11 && last_two <= 13){
+        return "th";
+    }
+    int last = n % 10;
+    if (last == 1){
+        return "st";
+    } else if (last == 2){
+        return "nd";
+    } else if (last == 3){
+        return "rd";
+    } else {
+        return "th";
+    }
+}
 
 int get_input(int numbers[100])
 {
     int count = 0;
     for(int i = 0; i < 100; i++) {
-        printf("Enter integer %d (or 0 to stop): ", i + 1);
+        printf("Enter integer %d%s (or 0 to stop): ", i + 1, get_suffix(i + 1));
         scanf("%d", &numbers[i]);
         if(numbers[i] == 0) {
             break;
@@ -14,6 +30,7 @@ int get_input(int numbers[100])
     printf("\n");
     return count;
 }
+
 
 void get_even_odd_sums(int numbers[], int count, int even_sums[], int *even_count, int odd_sums[],int *odd_count)
 {

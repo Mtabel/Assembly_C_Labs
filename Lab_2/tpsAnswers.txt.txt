@@ -1,0 +1,38 @@
+TPS 1.
+
+1. Matthew, Hunter, Steve
+2. https://www.youtube.com/watch?v=-gLsB2ZZXLs
+    https://www.youtube.com/watch?v=BoB-4O3ZyhQ
+    https://www.youtube.com/watch?v=sQjI5vqKUEo
+3. Done.
+4. Also Done.
+
+TPS 2.
+
+1. To compile Punishment.C so that GDB can debug it, you have to use the command "gcc -g Punishment.c -o punish"
+2. gdb ./punish     // <-Linux, add .exe for windows
+3.
+
+
+
+TPS 3.
+
+1. in the first line of main, four variables were made and only two were pointers, *px and *py.
+2. the values of x, y and arr[0] will be garbage values left in those specific memory locations.
+3. You Prevent them by setting each variable to 0, for an array you have to loop through each value setting each to 0.
+4. adresses look like:
+Memory Location of x: 00000000005FFEB4
+Memory Location of y: 00000000005FFEB0
+5. Looks like:
+Memory Location of x: 00000000005FFEB4
+Memory Location of y: 00000000005FFEB0
+Value of px: 0, and the address is 00000000005FFEB4
+Value of px: 0, and the address is 00000000005FFEB0
+6. for(int i=0; i<10; i++) {
+    printf("arr[%d]: %d\n", i, *(arr + i));
+}
+7.printf("First element of arr: %d\n", *arr); - Prints frist element of arr
+8.for(int i=0; i<10; i++) {
+    printf("arr[%d]: %p\n", i, arr + i);
+}
+The memory locations shift by a byte unit of 4. This make sense since it takes 4 bytes to make an int in C.

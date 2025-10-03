@@ -1,0 +1,10 @@
+Individual Assignment 1: Segmentation Faults
+1. Linej 25 caused the seg fault
+2. scanf puts the desired input into a memory location, by not refrencing the memory location a seg fault was created.
+3. The Bug is that you dont pass the memory location of sum, thus you cant add to sum outside of the function since it would only pass a value, not memory location.
+4. I made it so I pass the memory location of sum with & and add to it within the function as a pointer *sum
+
+Individual Assignment 2: Fix appendTest.c
+1.No it did not output like expected. It attempted to append but at the end it prints out odd characters at the end
+2.with the fix in Q1; adding a terminating character, it has solved this quesiton.
+3.The output is not what I expected, when we write str1: Hello! How are you? - there is only enough characters for that one string, thus it runs over the next thing in memory, str2 array.

@@ -1,0 +1,23 @@
+    TPS 1: 
+    How Memory is Used
+
+1. Static and Global memory memory pool: stores static and global memory for the entirety of the program.
+    Stack memory: Stores local variables and function parameters. It it created when the function is called and destroyed when the function exits.
+    Heap memory: Stores dynamically allocated variables using malloc. Exist until explicittly freed with free().
+
+2.  a. 3 variables are declared.
+    b.two of them are pointers - ptr in an integer pointer 4 bytes if not packed; handle is a pointer to a pointer THAT WILL CONTAIN... an int
+    c. num is stored in the stack, ptr and handle are both found in the heap since they are pointers and handled as such. yeah.
+    d. By Line 12 will be pointing to the stack memory from the heap since num is a stack var.
+3. Drawed
+4. Fine, Drawing Some more
+
+----------------------------------------------------------------------
+
+    TPS 2:
+    Structures in C 
+
+1.  this Structure defines a node that carries an int and float value, as well as a refrence to another node to define the next one in a chain. Essential the beggining of a linked list.
+2. Okay Done
+3. Structures seemed to be stored in the stack and are only initialized when asked for by the computer; ACTING like stack memory.
+the head and its destination's relationship is a linked list, where the next node is the head of the next and so on and so forth.

@@ -1,0 +1,39 @@
+Colaberated With Steve and Hunter
+
+TPS 1:
+1: Steve, Hunter
+
+2: Tutorials:
+Mac - https://www.youtube.com/watch?v=ZkoEHvG3GI8
+Linux - https://www.youtube.com/watch?v=s3ii48qYBxA
+Powershell - https://www.youtube.com/watch?v=FpRGRLI8Fy8
+https://www.geeksforgeeks.org/linux-unix/linux-commands-cheat-sheet/
+GeeksforGeeks
+Linux Commands Cheat Sheet: Beginner to Advanced 2025 - GeeksforGeeks
+Your All-in-One Learning Portal: GeeksforGeeks is a comprehensive educational platform that empowers learners across domains-spanning computer science and programming, school education, upskilling, commerce, software tools, competitive exams, and more.
+Image
+https://ubuntu.com/tutorials/command-line-for-beginners#1-overview
+Ubuntu
+The Linux command line for beginners | Ubuntu
+Ubuntu is an open source software operating system that runs from the desktop, to the cloud, to all your internet connected things.
+The Linux command line for beginners | Ubuntu
+https://ryanstutorials.net/linuxtutorial/
+
+TPS 2
+1:Finding the powershell using search and opening it
+	a: Yes
+	b: If you wanted to look at/interact with 2 different directories simultaneously without scrolling
+2: Using "ls"
+3: cd .\desktop\
+4: mkdir "CSE 31"
+
+TPS 3
+1:https://www.youtube.com/watch?v=QYG_3MV0smQ
+https://www.youtube.com/watch?v=Fw-Rqy06yt4
+3: gcc main.c
+4: by seeing 0 errors and then running the exe and seeing if it works
+5: Compile and assemble, but do not link
+6: -g Generates debugging information
+7: mv .\main.exe cselab1
+8: a file named a.exe is created
+9: .\a.exe
