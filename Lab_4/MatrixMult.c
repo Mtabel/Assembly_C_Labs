@@ -31,7 +31,7 @@ int** matMult(int **a, int **b, int size) {
 	// You will need to create a new matrix to store the product.
 	for(int i = 0; i < size; i++) {
 		for(int j = 0; j < size; j++) {
-			(*(*(result + i) + j)) = a[i][j] * b[i][j];
+			(*(*(result + i) + j)) = *(*(a + i) + j) * *(*(b + i) + j);
 		}
 	}
 	return result;
