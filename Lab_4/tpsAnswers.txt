@@ -1,3 +1,45 @@
+
+
+
+ No help given to me
+
 TPS 1.
 
-1. 
+1. since four_ints[] is an array and I am pointing to the first memory location, I would be able to read its location in Hex notation.
+I was wrong, it prints 2's value as a hexidecimal, which is just 2, just like how 50000 is c350 in hex.
+2.I would Expect if I cast the print function to a hex value that It would output 41. if I print out the list then 41 to 44.
+3. Verified, Was correct.
+4. No I am not lost and this is what I Expect. I used a four loop to print out everything.
+5. 
+    a. I belive 2 arrays were created in this program
+    b. They are point to the same location, this seems abnormal to me.
+    c.Printed
+6. Two consective elements are viewed every 4 Bytes, this is due to the array being casted into int meaning the array is type aware and will itterate every 4.
+7. Memory Layout of four_ints array (right-to-left, smallest address on RIGHT side)
+
+ --------------------------------------------------------------
+ | 0000008DF4FFF7DC | 0000008DF4FFF7D8 | 0000008DF4FFF7D4 | 0000008DF4FFF7D0 |
+ --------------------------------------------------------------
+ |        2          |        2          |        2          |        2          |
+ --------------------------------------------------------------
+ |       0x2         |       0x2         |       0x2         |       0x2         |
+ --------------------------------------------------------------
+ 8. The diffrence between these two arrays is there type. 
+ 9.
+ --------------------------------------------------------------
+ | 000000B7B13FF903 | 000000B7B13FF902 | 000000B7B13FF901 | 000000B7B13FF900 |
+ --------------------------------------------------------------
+ |        D          |        C          |        B          |        A          |
+ --------------------------------------------------------------
+ |       0x44        |       0x43        |       0x42        |       0x41        |
+ --------------------------------------------------------------
+ 10. C access the memory based on the type is casted to in an array.
+
+ TPS. 2.
+ 1. line 8 creates a pointer to that points to a pointers of integers
+ 2. You would access the ith value of the matrix by arr[][]
+ 3. done
+ 4. We need to pass the size of the array since c does not know the size of the array
+ 5. Okay
+ 6. done
+ 7. done
