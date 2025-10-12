@@ -8,6 +8,16 @@ void printPuzzle(char** arr);
 void searchPuzzle(char** arr, char* word);
 int bSize;
 
+
+
+// ! Better Comments by Aaron Bond
+// TODO: This needs fixing (orange)
+// ! This is important (red)
+// ? Should this be refactored? (blue)
+// * Highlighted info (green)
+
+
+// !--------------------------------------------------------------
 // Main function, DO NOT MODIFY 	
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -54,6 +64,9 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+// !--------------------------------------------------------------
+
+// Completed
 void printPuzzle(char** arr) {
 	// This function will print out the complete puzzle grid (arr). 
     // It must produce the output in the SAME format as the samples 
@@ -68,10 +81,30 @@ void printPuzzle(char** arr) {
 
 }
 
+
+// TODO: Master Function; to be implemented
 void searchPuzzle(char** arr, char* word) {
     // This function checks if arr contains the search word. If the 
     // word appears in arr, it will print out a message and the path 
     // as shown in the sample runs. If not found, it will print a 
     // different message as shown in the sample runs.
     // Your implementation here...
+
+    // Find First Occurrence of First Letter : can be done with a nested loop
+
+    
+    // * Nested loop to find/use first letter -- Needs to give all attempts a chance
+        //Create a linked list to store the path of the word found - starting from the first letter found
+
+
+        // Check all 8 directions from the first letter found
+        // if next letter in sequence is found, traverse in that direction
+        // if next letter is not found, mark as bad path and backtrack and try another direction
+
+        
+        // if sequence is found, send to helper array function for printing
+
+        // -------------------------------
+    //if word single instance found, print word found message
+    //else print not found message
 }
