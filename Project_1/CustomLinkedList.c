@@ -23,12 +23,12 @@ LinkedList* createList() {
 }
 
 // Add a node to the end
-void append(LinkedList* list, int valid_path, int row, int col, char letter) {
+void append(LinkedList* list, int valid_path, int row, int col, char* word) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->valid_path = valid_path;
     newNode->row = row;
     newNode->col = col;
-    newNode->letter = letter;
+    
     newNode->next = NULL;
 
     if (list->head == NULL) {
@@ -43,6 +43,7 @@ void append(LinkedList* list, int valid_path, int row, int col, char letter) {
         newNode->prev = temp;
         newNode->increment = temp->increment;
     }
+    newNode->letter = *(word + newNode->increment);
 }
 
 // Print the list
@@ -98,6 +99,15 @@ char* get_path_as_string(LinkedList* list) {
     }
     path[length] = '\0'; // Null-terminate the string
     return path;
+}
+int get_list_length(LinkedList* list) {
+    Node* temp = list->head;
+    int length = 0;
+    while (temp != NULL) {
+        length++;
+        temp = temp->next;
+    }
+    return length;
 }
 
 

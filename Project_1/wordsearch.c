@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include "CustomLinkedList.h"
 
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions or global variables
@@ -18,7 +18,7 @@ void print_int_array(int** arr, int size);
 int bSize;
 
 int **Possible_Paths; // Global variable for path array
-
+LinkedList* list;
 
 // ! Better Comments by Aaron Bond
 // TODO: This needs fixing (orange)
@@ -94,6 +94,7 @@ void printPuzzle(char** arr) {
 
 // TODO: Master Function; to be implemented
 void searchPuzzle(char** arr, char* word) {
+
     // This function checks if arr contains the search word. If the 
     // word appears in arr, it will print out a message and the path 
     // as shown in the sample runs. If not found, it will print a 
@@ -105,8 +106,7 @@ void searchPuzzle(char** arr, char* word) {
     
     // mark possible starting positions
     mark_possible_start(arr, bSize, *word, Possible_Paths);
-    // print
-    print_int_array(Possible_Paths, bSize);
+    
 
 
 
@@ -118,22 +118,39 @@ void searchPuzzle(char** arr, char* word) {
 
     // TODO: Pseudocode
     // Find First Occurrence of First Letter : can be done with a nested loop
+    mark_possible_start(arr, bSize, *word, Possible_Paths);
+    // print - for testing
+    printf("\nPossible Paths Array:\n");
+    print_int_array(Possible_Paths, bSize);
     // ? if found call to Traverse() function
     // if no first letter found, print not found message -- Easiest case
 
     
     // Traverse(char** arr, char* word, int row, int columb) VVV
+    list = createList();
     // * Nested loop to find/use first letter -- Needs to give all attempts a chance
+    for (int i = 0; i < bSize; i++) {
+        for (int j = 0; j < bSize; j++) {
         //Create a linked list to store the path of the word found - starting from the first letter found
-
-
-        // Check all 8 directions from the first letter found
+            if(Possible_Paths[i][j] == -1)
+            { // if first letter found at position
+                printf("First letter found at: (%d,%d)\n", i, j); // for testing
+                append(list,1,i,j, word); // Example starting point
+                printf("%s",get_path_as_string(list)); // for testing
+                // Check all 8 directions from the first letter found
+                for (int direction = 0; direction < 8; direction++) {
+                    // Move in that direction to find the next letter in the word
+                    // If next letter is found, add to linked list
+                    // If next letter is not found, mark as bad path and try another direction
+                }
+            }
         // if next letter in sequence is found, traverse in that direction
         // if next letter is not found, mark as bad path and backtrack and try another direction
 
 
         // if sequence is found, send to helper array function for printing
-
+        }   
+    }
         // -------------------------------
     //if word single instance found, print word found message
     //else print not found message

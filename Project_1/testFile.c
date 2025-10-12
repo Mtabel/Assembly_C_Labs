@@ -16,6 +16,7 @@ int main() {
     } else {
         printf("Node not found at (0,1)\n");
     }
+    printf("List Length: %d\n", get_list_length(list));
     freeList(list);
     return 0;
 }
