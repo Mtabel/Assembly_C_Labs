@@ -32,7 +32,7 @@ void append(LinkedList* list, int valid_path, int row, int col, char* word) {
     newNode->next = NULL;
 
     if (list->head == NULL) {
-        newNode->increment = 0;
+        newNode->increment = 1; // First node
         list->head = newNode;
 
     } else {
@@ -123,16 +123,16 @@ void remove_last(LinkedList* list) {
         free(temp);
     }
 }
-void get_last_node(LinkedList* list, Node** node) {
+Node* get_last_node(LinkedList* list) {
     if (list->head == NULL) {
-        *node = NULL; // List is empty
-        return;
+        // List is empty
+        return NULL;
     }
 
     Node* temp = list->head;
     while (temp->next != NULL)
         temp = temp->next;
-    *node = temp; // Return the last node
+    return temp; // Return the last node
 }
 
 

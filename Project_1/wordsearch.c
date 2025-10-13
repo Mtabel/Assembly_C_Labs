@@ -140,7 +140,7 @@ void searchPuzzle(char** arr, char* word) {
                 append(list,1,i,j, word); // Example starting point
                 printf("%s\n",get_path_as_string(list)); // for testing
                 // Check all 8 directions from the position given letter found
-                    while(search_from_position(arr, word, i, j) && get_list_length(list) < strlen(word)); //* Checks all 8 directions from the position given letter found
+                    while(search_from_position(arr, word, get_last_node(list)->row, get_last_node(list)->col) && get_list_length(list) < strlen(word)); //* Checks all 8 directions from the position given letter found
                     if(get_list_length(list) == strlen(word))
                     {
                         printf("Word Found: %s\n", get_path_as_string(list));
@@ -216,7 +216,7 @@ int search_from_position(char** arr, char* word, int row, int col) {
             int newRow = row + (k - 1);
             int newCol = col + (l - 1);
             // Check bounds
-            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize) {
+            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize && check_child_at_location(list, newRow, newCol) == NULL) {
                 printf("Checking direction (%d,%d) to (%d,%d)\n", k-1, l-1, newRow, newCol); // for testing
                 printf("Looking for letter: %c\n", *(word + get_list_length(list))); // for testing
                 if(compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list)))) {

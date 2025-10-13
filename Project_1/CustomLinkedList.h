@@ -21,6 +21,6 @@ typedef struct LinkedList {
     char* get_path_as_string(LinkedList* list);
     int get_list_length(LinkedList* list);
     void remove_last(LinkedList* list);
-    void get_last_node(LinkedList* list, Node** node);
+    Node* get_last_node(LinkedList* list);
     
 #endif /* CUSTOM_LINKED_LIST_H */
