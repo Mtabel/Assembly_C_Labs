@@ -130,47 +130,29 @@ void searchPuzzle(char** arr, char* word) {
 
     
     // Traverse(char** arr, char* word, int row, int columb) VVV
-    list = createList();
+
     // * Nested loop to find/use first letter -- Needs to give all attempts a chance
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
         //Create a linked list to store the path of the word found - starting from the first letter found
             if(Possible_Paths[i][j] == -999)
             { // if first letter found at position
+                list = createList();
                 printf("First letter found at: (%d,%d)\n", i, j); // for testing
                 append(list,1,i,j, word); // Example starting point
-                {
-                    char *tmp = get_path_as_string(list);
-                    if (tmp) { printf("%s\n", tmp); free(tmp); }
-                }
                 // Check all 8 directions from the position given letter found
-                    {
-                        Node *last = get_last_node(list);
-                        while (global_breakout == 1 && get_list_length(list) < (int)strlen(word) && last != NULL) {
-                            search_from_position(arr, word, last->row, last->col);
-                            last = get_last_node(list);
-                            if (last == list->head) {
-                                global_breakout = 0; // Breakout activated
-                                break; // Break if list is empty
-                            }
-                        }
+                while ( global_breakout == 1 && get_list_length(list) < (int)strlen(word)) {
+                    global_breakout = search_from_position(arr, word, get_last_node(list)->row, get_last_node(list)->col);
+                    if(global_breakout == 0) {
+                        Possible_Paths[get_last_node(list)->row][get_last_node(list)->col] = -get_last_node(list)->increment; // for testing
+                        remove_last(list); // Backtrack if needed
+                        printf("Backtracking to: (%d,%d)\n", get_last_node(list)->row, get_last_node(list)->col); // for testing
+                        global_breakout = 1; // Reset breakout for next search
                     }
-                    if(get_list_length(list) == strlen(word))
-                    {
-                        {
-                            char *tmp = get_path_as_string(list);
-                            if (tmp) { printf("Word Found: %s\n", tmp); free(tmp); }
-                        }
-                        mark_path(Possible_Paths, list);
-                        print_int_array(Possible_Paths, bSize);
-                        return;
-                    }
-                    else
-                    {
-                        remove_last(list); // remove the starting point
-                        global_breakout = 1; // reset breakout variable
-                        printf("Not found, trying next starting position\n");
-                    }
+                    mark_path(Possible_Paths, list); // for testing
+                    print_int_array(Possible_Paths, bSize); // for testing
+
+                }
                 
             }
         }   
@@ -218,6 +200,8 @@ void print_int_array(int** arr, int size) {
         printf("\n");
     }
 }
+
+// Search in all 8 directions from the given position
 int search_from_position(char** arr, char* word, int row, int col) {
     for(int k = 0; k < 3; k++) {
         for(int l = 0; l < 3; l++) {
@@ -227,29 +211,14 @@ int search_from_position(char** arr, char* word, int row, int col) {
             //Offsets for 3x3 grid -- Handled by nested loops
             int newRow = row + (k - 1);
             int newCol = col + (l - 1);
-            // Check bounds
-            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize && check_child_at_location(list, newRow, newCol) == NULL && Possible_Paths[newRow][newCol] != -get_last_node(list)->increment) {
-                printf("Checking direction (%d,%d) to (%d,%d)\n", k-1, l-1, newRow, newCol); // for testing
-                printf("Looking for letter: %c\n", *(word + get_list_length(list))); // for testing
-                if(compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list)))) {
-                    printf("Next letter found at (%d,%d)\n", newRow, newCol); // for testing
-                    // ! think about recursion right here
-                    append(list,1,newRow,newCol, word);
-                    printf("%s\n",get_path_as_string(list)); // for testing
-                    return 1;
-                }
-                // If next letter in sequence is found, traverse in that direction
-                // If next letter is not found, mark as bad path and backtrack and try another direction
+            // Check bounds and if the next letter matches
+            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize &&
+                compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list))) && (get_last_node(list)->increment + 1) != -Possible_Paths[newRow][newCol]) {
+                append(list, 1, newRow, newCol, word);
+                return 1; // Found and appended
             }
         }
     }
-    printf("Letter: %c not found around (%d,%d)\n", *(word + get_list_length(list)), row, col); // for testing
-    printf("Backtracking from (%d,%d)\n", row, col); // for testing
-    // we want to grab the last node, free it and mark that position by a negative value to avoid reuse
-    Possible_Paths[get_last_node(list)->row][get_last_node(list)->col] = -get_last_node(list)->increment; // Mark as bad path
-    remove_last(list);
-    if(list->head == NULL)
-        global_breakout = 0; // Breakout activated
     return 0; // Not found in any direction
 }
 
