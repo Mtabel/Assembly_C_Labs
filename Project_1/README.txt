@@ -1,4 +1,16 @@
 
+/*
+    Programs:
+        wordseach.c
+        CustomLinkedList.c/h
+
+    Created by Matthew Tabel, Dina S.
+    10/13/25
+
+
+*/
+
+
 Required Files to run:
     CustomLinkedList.c
     CustomLinkedList.h
