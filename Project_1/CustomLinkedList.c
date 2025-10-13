@@ -41,7 +41,7 @@ void append(LinkedList* list, int valid_path, int row, int col, char* word) {
             temp = temp->next;
         temp->next = newNode;
         newNode->prev = temp;
-        newNode->increment = temp->increment;
+        newNode->increment = temp->increment + 1;
     }
     newNode->letter = *(word + newNode->increment);
 }
@@ -108,6 +108,31 @@ int get_list_length(LinkedList* list) {
         temp = temp->next;
     }
     return length;
+}
+void remove_last(LinkedList* list) {
+    if (list->head == NULL) return; // List is empty
+
+    if (list->head->next == NULL) {
+        free(list->head);
+        list->head = NULL; // List had one node
+    } else {
+        Node* temp = list->head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->prev->next = NULL; // Remove last node
+        free(temp);
+    }
+}
+void get_last_node(LinkedList* list, Node** node) {
+    if (list->head == NULL) {
+        *node = NULL; // List is empty
+        return;
+    }
+
+    Node* temp = list->head;
+    while (temp->next != NULL)
+        temp = temp->next;
+    *node = temp; // Return the last node
 }
 
 

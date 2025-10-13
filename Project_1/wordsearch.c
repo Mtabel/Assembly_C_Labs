@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "CustomLinkedList.h"
+#include <string.h>
 
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions or global variables
@@ -12,7 +13,8 @@ int compareLetters(char a, char b);
 int **create_empty_array(int size);
 void ** mark_possible_start(char **arr, int size, char first_letter, int **Path_Array);
 void print_int_array(int** arr, int size);
-
+int search_from_position(char** arr, char* word, int row, int col);
+void mark_path(int** Path_Array, LinkedList* list);
 
 
 int bSize;
@@ -136,13 +138,24 @@ void searchPuzzle(char** arr, char* word) {
             { // if first letter found at position
                 printf("First letter found at: (%d,%d)\n", i, j); // for testing
                 append(list,1,i,j, word); // Example starting point
-                printf("%s",get_path_as_string(list)); // for testing
-                // Check all 8 directions from the first letter found
-                for (int direction = 0; direction < 8; direction++) {
-                    // Move in that direction to find the next letter in the word
-                    // If next letter is found, add to linked list
-                    // If next letter is not found, mark as bad path and try another direction
-                }
+                printf("%s\n",get_path_as_string(list)); // for testing
+                // Check all 8 directions from the position given letter found
+                    while(search_from_position(arr, word, i, j) && get_list_length(list) < strlen(word)); //* Checks all 8 directions from the position given letter found
+                    if(get_list_length(list) == strlen(word))
+                    {
+                        printf("Word Found: %s\n", get_path_as_string(list));
+                        mark_path(Possible_Paths, list);
+                        print_int_array(Possible_Paths, bSize);
+                        return;
+                    }
+                    else
+                    {
+                        printf("Backtracking from (%d,%d)\n", i, j); // for testing
+                        freeList(list);
+                        list = createList();
+                        append(list,1,i,j, word); // reset to starting point
+                    }
+                
             }
         // if next letter in sequence is found, traverse in that direction
         // if next letter is not found, mark as bad path and backtrack and try another direction
@@ -192,5 +205,42 @@ void print_int_array(int** arr, int size) {
             printf("%5d ", *(*(arr + i) + j));
         }
         printf("\n");
+    }
+}
+int search_from_position(char** arr, char* word, int row, int col) {
+    for(int k = 0; k < 3; k++) {
+        for(int l = 0; l < 3; l++) {
+            if(k == 1 && l == 1) {
+                continue; // Skip the center position (0,0)
+            }
+            int newRow = row + (k - 1);
+            int newCol = col + (l - 1);
+            // Check bounds
+            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize) {
+                printf("Checking direction (%d,%d) to (%d,%d)\n", k-1, l-1, newRow, newCol); // for testing
+                printf("Looking for letter: %c\n", *(word + get_list_length(list))); // for testing
+                if(compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list)))) {
+                    printf("Next letter found at (%d,%d)\n", newRow, newCol); // for testing
+                    // ! think about recursion right here
+                    append(list,1,newRow,newCol, word);
+                    printf("%s\n",get_path_as_string(list)); // for testing
+                    return 1;
+                }
+                // If next letter in sequence is found, traverse in that direction
+                // If next letter is not found, mark as bad path and backtrack and try another direction
+            }
+        }
+    }
+    printf("Letter: %c not found around (%d,%d)\n", *(word + get_list_length(list)), row, col); // for testing
+    print_int_array(Possible_Paths, bSize);
+    return 0; // Not found in any direction
+}
+
+void mark_path(int** Path_Array, LinkedList* list) {
+    Node* temp = list->head;
+    while (temp != NULL) {
+        Path_Array[temp->row][temp->col] = temp->increment; // Mark the path
+        printf("Marking path at (%d,%d) with %d\n", temp->row, temp->col, temp->increment); // for testing
+        temp = temp->next;
     }
 }
