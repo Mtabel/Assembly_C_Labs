@@ -11,13 +11,14 @@ void searchPuzzle(char** arr, char* word);
 // * Helper functions
 int compareLetters(char a, char b);
 int **create_empty_array(int size);
-void ** mark_possible_start(char **arr, int size, char first_letter, int **Path_Array);
+void mark_possible_start(char **arr, int size, char first_letter, int **Path_Array);
 void print_int_array(int** arr, int size);
 int search_from_position(char** arr, char* word, int row, int col);
 void mark_path(int** Path_Array, LinkedList* list);
 
 
 int bSize;
+int global_breakout = 1; // Breakout variable not activated
 
 int **Possible_Paths; // Global variable for path array
 LinkedList* list;
@@ -134,39 +135,47 @@ void searchPuzzle(char** arr, char* word) {
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
         //Create a linked list to store the path of the word found - starting from the first letter found
-            if(Possible_Paths[i][j] == -1)
+            if(Possible_Paths[i][j] == -999)
             { // if first letter found at position
                 printf("First letter found at: (%d,%d)\n", i, j); // for testing
                 append(list,1,i,j, word); // Example starting point
-                printf("%s\n",get_path_as_string(list)); // for testing
+                {
+                    char *tmp = get_path_as_string(list);
+                    if (tmp) { printf("%s\n", tmp); free(tmp); }
+                }
                 // Check all 8 directions from the position given letter found
-                    while(search_from_position(arr, word, get_last_node(list)->row, get_last_node(list)->col) && get_list_length(list) < strlen(word)); //* Checks all 8 directions from the position given letter found
+                    {
+                        Node *last = get_last_node(list);
+                        while (global_breakout == 1 && get_list_length(list) < (int)strlen(word) && last != NULL) {
+                            search_from_position(arr, word, last->row, last->col);
+                            last = get_last_node(list);
+                            if (last == list->head) {
+                                global_breakout = 0; // Breakout activated
+                                break; // Break if list is empty
+                            }
+                        }
+                    }
                     if(get_list_length(list) == strlen(word))
                     {
-                        printf("Word Found: %s\n", get_path_as_string(list));
+                        {
+                            char *tmp = get_path_as_string(list);
+                            if (tmp) { printf("Word Found: %s\n", tmp); free(tmp); }
+                        }
                         mark_path(Possible_Paths, list);
                         print_int_array(Possible_Paths, bSize);
                         return;
                     }
                     else
                     {
-                        printf("Backtracking from (%d,%d)\n", i, j); // for testing
-                        freeList(list);
-                        list = createList();
-                        append(list,1,i,j, word); // reset to starting point
+                        remove_last(list); // remove the starting point
+                        global_breakout = 1; // reset breakout variable
+                        printf("Not found, trying next starting position\n");
                     }
                 
             }
-        // if next letter in sequence is found, traverse in that direction
-        // if next letter is not found, mark as bad path and backtrack and try another direction
-
-
-        // if sequence is found, send to helper array function for printing
         }   
     }
-        // -------------------------------
-    //if word single instance found, print word found message
-    //else print not found message
+
 }
 
 // allows case insensitive comparison of letters due to aSCII values
@@ -177,7 +186,7 @@ int compareLetters(char a, char b) {
     return 0;
 }
 
-
+// Helper function to create an empty 2D integer array
 int **create_empty_array(int size) {
     int **result = malloc(size * sizeof(int*));
     for (int i = 0; i < size; i++) {
@@ -190,11 +199,13 @@ int **create_empty_array(int size) {
     }
     return result;
 }
-void ** mark_possible_start(char **arr, int size, char first_letter, int **Path_Array) {
+
+
+void mark_possible_start(char **arr, int size, char first_letter, int **Path_Array) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (compareLetters(*(*(arr + i) + j), first_letter)) {
-                *(*(Path_Array + i) + j) = -1; // mark the position in Path_Array
+                *(*(Path_Array + i) + j) = -999; // mark the position in Path_Array
             }
         }
     }
@@ -213,10 +224,11 @@ int search_from_position(char** arr, char* word, int row, int col) {
             if(k == 1 && l == 1) {
                 continue; // Skip the center position (0,0)
             }
+            //Offsets for 3x3 grid -- Handled by nested loops
             int newRow = row + (k - 1);
             int newCol = col + (l - 1);
             // Check bounds
-            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize && check_child_at_location(list, newRow, newCol) == NULL) {
+            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize && check_child_at_location(list, newRow, newCol) == NULL && Possible_Paths[newRow][newCol] != -get_last_node(list)->increment) {
                 printf("Checking direction (%d,%d) to (%d,%d)\n", k-1, l-1, newRow, newCol); // for testing
                 printf("Looking for letter: %c\n", *(word + get_list_length(list))); // for testing
                 if(compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list)))) {
@@ -232,7 +244,12 @@ int search_from_position(char** arr, char* word, int row, int col) {
         }
     }
     printf("Letter: %c not found around (%d,%d)\n", *(word + get_list_length(list)), row, col); // for testing
-    print_int_array(Possible_Paths, bSize);
+    printf("Backtracking from (%d,%d)\n", row, col); // for testing
+    // we want to grab the last node, free it and mark that position by a negative value to avoid reuse
+    Possible_Paths[get_last_node(list)->row][get_last_node(list)->col] = -get_last_node(list)->increment; // Mark as bad path
+    remove_last(list);
+    if(list->head == NULL)
+        global_breakout = 0; // Breakout activated
     return 0; // Not found in any direction
 }
 
