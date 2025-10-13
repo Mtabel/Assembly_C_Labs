@@ -3,6 +3,8 @@
 #include "CustomLinkedList.h"
 #include <string.h>
 
+#define DEBUG 1 // 0 = off, 1 = on
+
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions or global variables
 void printPuzzle(char** arr);
@@ -15,10 +17,12 @@ void mark_possible_start(char **arr, int size, char first_letter, int **Path_Arr
 void print_int_array(int** arr, int size);
 int search_from_position(char** arr, char* word, int row, int col);
 void mark_path(int** Path_Array, LinkedList* list);
+void finalize_and_Brushup(char* word, LinkedList* list);
 
 
 int bSize;
 int global_breakout = 1; // Breakout variable not activated
+int iteration = 1; // Iteration counter for debugging
 
 int **Possible_Paths; // Global variable for path array
 LinkedList* list;
@@ -123,41 +127,72 @@ void searchPuzzle(char** arr, char* word) {
     // Find First Occurrence of First Letter : can be done with a nested loop
     mark_possible_start(arr, bSize, *word, Possible_Paths);
     // print - for testing
-    printf("\nPossible Paths Array:\n");
-    print_int_array(Possible_Paths, bSize);
-    // ? if found call to Traverse() function
-    // if no first letter found, print not found message -- Easiest case
-
-    
-    // Traverse(char** arr, char* word, int row, int columb) VVV
-
+    if(DEBUG == 1)
+    {
+        printf("\nPossible Paths Array:\n");
+        print_int_array(Possible_Paths, bSize);
+    }
+    list = createList();
     // * Nested loop to find/use first letter -- Needs to give all attempts a chance
     for (int i = 0; i < bSize; i++) {
         for (int j = 0; j < bSize; j++) {
         //Create a linked list to store the path of the word found - starting from the first letter found
             if(Possible_Paths[i][j] == -999)
             { // if first letter found at position
-                list = createList();
-                printf("First letter found at: (%d,%d)\n", i, j); // for testing
+                global_breakout = 1; // Reset breakout for new starting position
+                
+                if(DEBUG == 1) printf("First letter found at: (%d,%d)\n", i, j); // for testing
                 append(list,1,i,j, word); // Example starting point
                 // Check all 8 directions from the position given letter found
                 while ( global_breakout == 1 && get_list_length(list) < (int)strlen(word)) {
+                    if(DEBUG == 1) {
+                        printf("about to call search_from_position\n");
+                        printf("Position [%d] [%d]", i, j);
+                        printf("Iteration: %d\n", iteration++);
+                        printf("list length: %d\n", get_last_node(list)->col); // for testing
+                    }
                     global_breakout = search_from_position(arr, word, get_last_node(list)->row, get_last_node(list)->col);
+                    if(DEBUG == 1) {
+                        printf("search_from_position returned: %d\n", global_breakout);
+                    }
                     if(global_breakout == 0) {
                         Possible_Paths[get_last_node(list)->row][get_last_node(list)->col] = -get_last_node(list)->increment; // for testing
+                        printf("before remove_last\n");
                         remove_last(list); // Backtrack if needed
-                        printf("Backtracking to: (%d,%d)\n", get_last_node(list)->row, get_last_node(list)->col); // for testing
+                        printf("After remove_last\n");
+                        if(DEBUG == 1 && get_last_node(list) != NULL)
+                        {
+                            printf("Backtracking to: (%d,%d)\n", get_last_node(list)->row, get_last_node(list)->col); //? Requires get_last_node(list) != NULL
+                            print_int_array(Possible_Paths, bSize); // for testing
+                        }
                         global_breakout = 1; // Reset breakout for next search
                     }
-                    mark_path(Possible_Paths, list); // for testing
-                    print_int_array(Possible_Paths, bSize); // for testing
-
+                    if(DEBUG == 1)
+                    {
+                        mark_path(Possible_Paths, list); // for testing
+                        print_int_array(Possible_Paths, bSize); // for testing
+                    }
+                    if(DEBUG == 1) {
+                        if (list != NULL) {
+                            printf("list length: %d\n", get_list_length(list));
+                            fflush(stdout);
+                        } else {
+                            printf("list is NULL\n");
+                            fflush(stdout);
+                        }
+                    }
+                    if(list->head == NULL) {
+                        printf("Position [%d] [%d] , does not have requirements.\n", i, j);
+                        global_breakout = 0; // Breakout if list is empty
+                        Possible_Paths[i][j] = 0; // Reset position
+                    }
                 }
                 
             }
         }   
     }
-
+    
+    finalize_and_Brushup(word, list);
 }
 
 // allows case insensitive comparison of letters due to aSCII values
@@ -226,7 +261,32 @@ void mark_path(int** Path_Array, LinkedList* list) {
     Node* temp = list->head;
     while (temp != NULL) {
         Path_Array[temp->row][temp->col] = temp->increment; // Mark the path
-        printf("Marking path at (%d,%d) with %d\n", temp->row, temp->col, temp->increment); // for testing
+        if(DEBUG == 1)
+        {
+            printf("Marking path at (%d,%d) with %d\n", temp->row, temp->col, temp->increment); // for testing
+
+        }
         temp = temp->next;
     }
+}
+
+void finalize_and_Brushup(char* word, LinkedList* list)
+{
+    if(get_list_length(list) == (int)strlen(word)) {
+        printf("\nWord Found!\n");
+        printf("Printing Search Path: \n");
+        Possible_Paths = create_empty_array(bSize); // Reset for final path
+        mark_path(Possible_Paths, list);
+        print_int_array(Possible_Paths, bSize);
+        
+
+    } else {
+        printf("\nWord Not Found!\n");
+    }
+}
+
+// TODO: Implement Pretty Path Printing
+void pretty_print_path(int** Possible_Paths, LinkedList* list)
+{
+
 }
