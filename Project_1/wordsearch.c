@@ -157,9 +157,7 @@ void searchPuzzle(char** arr, char* word) {
                     }
                     if(global_breakout == 0) {
                         Possible_Paths[get_last_node(list)->row][get_last_node(list)->col] = -get_last_node(list)->increment; // for testing
-                        printf("before remove_last\n");
                         remove_last(list); // Backtrack if needed
-                        printf("After remove_last\n");
                         if(DEBUG == 1 && get_last_node(list) != NULL)
                         {
                             printf("Backtracking to: (%d,%d)\n", get_last_node(list)->row, get_last_node(list)->col); //? Requires get_last_node(list) != NULL
@@ -186,13 +184,17 @@ void searchPuzzle(char** arr, char* word) {
                         global_breakout = 0; // Breakout if list is empty
                         Possible_Paths[i][j] = 0; // Reset position
                     }
+                    if(get_list_length(list) == (int)strlen(word))
+                    {
+                        finalize_and_Brushup(word, list);
+                        return; // Break if word length reached
+                    }
                 }
                 
             }
         }   
     }
     
-    finalize_and_Brushup(word, list);
 }
 
 // allows case insensitive comparison of letters due to aSCII values
@@ -282,6 +284,8 @@ void finalize_and_Brushup(char* word, LinkedList* list)
 
     } else {
         printf("\nWord Not Found!\n");
+        printf("%s\n",get_path_as_string(list));
+        printf("%s\n", word);
     }
 }
 
