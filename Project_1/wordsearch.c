@@ -3,7 +3,7 @@
 #include "CustomLinkedList.h"
 #include <string.h>
 
-#define DEBUG 1 // 0 = off, 1 = on
+#define DEBUG 0 // 0 = off, 1 = on
 
 // Declarations of the two functions you will implement
 // Feel free to declare any helper functions or global variables
@@ -18,6 +18,8 @@ void print_int_array(int** arr, int size);
 int search_from_position(char** arr, char* word, int row, int col);
 void mark_path(int** Path_Array, LinkedList* list);
 void finalize_and_Brushup(char* word, LinkedList* list);
+void pretty_print_path(int** Possible_Paths, LinkedList* list);
+int return_hights_place(int number); // returns the highest place value of a number
 
 
 int bSize;
@@ -173,18 +175,16 @@ void searchPuzzle(char** arr, char* word) {
                     if(DEBUG == 1) {
                         if (list != NULL) {
                             printf("list length: %d\n", get_list_length(list));
-                            fflush(stdout);
                         } else {
                             printf("list is NULL\n");
-                            fflush(stdout);
                         }
                     }
                     if(list->head == NULL) {
-                        printf("Position [%d] [%d] , does not have requirements.\n", i, j);
+                        //printf("Position [%d] [%d] , does not have requirements.\n", i, j);
                         global_breakout = 0; // Breakout if list is empty
                         Possible_Paths[i][j] = 0; // Reset position
                     }
-                    if(get_list_length(list) == (int)strlen(word))
+                    if(get_list_length(list) == (int)strlen(word)) // If word length reache : Word Found
                     {
                         finalize_and_Brushup(word, list);
                         return; // Break if word length reached
@@ -194,7 +194,8 @@ void searchPuzzle(char** arr, char* word) {
             }
         }   
     }
-    
+    finalize_and_Brushup(word, list); // Word not found
+    return; // Break if word length reached
 }
 
 // allows case insensitive comparison of letters due to aSCII values
@@ -278,19 +279,63 @@ void finalize_and_Brushup(char* word, LinkedList* list)
         printf("\nWord Found!\n");
         printf("Printing Search Path: \n");
         Possible_Paths = create_empty_array(bSize); // Reset for final path
-        mark_path(Possible_Paths, list);
-        print_int_array(Possible_Paths, bSize);
+        pretty_print_path(Possible_Paths, list); // Pretty print path
         
 
     } else {
         printf("\nWord Not Found!\n");
-        printf("%s\n",get_path_as_string(list));
-        printf("%s\n", word);
+        //printf("%s\n",get_path_as_string(list));
+        //printf("%s\n", word);
     }
 }
 
 // TODO: Implement Pretty Path Printing
+int return_hights_place(int number) // returns the highest place value of a number
+{
+    int result = 0;
+    while (number > 0)
+    {
+        number /= 10;
+        result++;
+    }
+    return result;
+}
+int return_number_readyToPaste(int number_to_add, int number)
+{
+    int highest_place = return_hights_place(number_to_add); // make space for the new number
+    int result = 0;
+    for (int i = 0; i < highest_place; i++)
+    {
+        number *= 10;
+    }
+    //printf("Number after shifting: %d\n", number); // Debugging line
+    //printf("Number to add: %d\n", number_to_add); // Debugging line
+    result += number_to_add;
+    result += number;
+    return result;
+}
 void pretty_print_path(int** Possible_Paths, LinkedList* list)
 {
+    Possible_Paths = create_empty_array(bSize); // Reset for final path
 
+    // Properly format the path numbers
+    Node* temp = list->head;
+    while (temp != NULL) {
+        if(Possible_Paths[temp->row][temp->col] > 0) // If already marked
+        {
+            Possible_Paths[temp->row][temp->col] = return_number_readyToPaste(Possible_Paths[temp->row][temp->col],temp->increment);
+        }
+        else{
+            Possible_Paths[temp->row][temp->col] = temp->increment; // Mark the path as normal if not
+        }
+        if(DEBUG == 1)
+        {
+            printf("Marking path at (%d,%d) with %d\n", temp->row, temp->col, temp->increment); // for testing
+
+        }
+        temp = temp->next;
+    }
+
+
+    print_int_array(Possible_Paths, bSize);
 }
