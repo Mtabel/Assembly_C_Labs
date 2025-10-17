@@ -3,6 +3,14 @@
 #include "CustomLinkedList.h"
 #include <string.h>
 
+/*
+    Created by Matthew Tabel, Dina S.
+    10/13/25
+
+
+*/
+
+
 #define DEBUG 0 // 0 = off, 1 = on
 
 // Declarations of the two functions you will implement
@@ -27,6 +35,7 @@ int global_breakout = 1; // Breakout variable not activated
 int iteration = 1; // Iteration counter for debugging
 
 int **Possible_Paths; // Global variable for path array
+int **attemps_grid; // Grid to track attempts
 LinkedList* list;
 
 // ! Better Comments by Aaron Bond
@@ -112,6 +121,7 @@ void searchPuzzle(char** arr, char* word) {
 
     // Make empty path array
     Possible_Paths = create_empty_array(bSize);
+    attemps_grid = create_empty_array(bSize);
     
     // mark possible starting positions
     mark_possible_start(arr, bSize, *word, Possible_Paths);
@@ -158,6 +168,7 @@ void searchPuzzle(char** arr, char* word) {
                         printf("search_from_position returned: %d\n", global_breakout);
                     }
                     if(global_breakout == 0) {
+                        attemps_grid[get_last_node(list)->row][get_last_node(list)->col]++; // mark attempt on grid
                         Possible_Paths[get_last_node(list)->row][get_last_node(list)->col] = -get_last_node(list)->increment; // for testing
                         remove_last(list); // Backtrack if needed
                         if(DEBUG == 1 && get_last_node(list) != NULL)
@@ -251,7 +262,7 @@ int search_from_position(char** arr, char* word, int row, int col) {
             int newCol = col + (l - 1);
             // Check bounds and if the next letter matches
             if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize &&
-                compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list))) && (get_last_node(list)->increment + 1) != -Possible_Paths[newRow][newCol]) {
+                compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list))) && (get_last_node(list)->increment + 1) != -Possible_Paths[newRow][newCol] && attemps_grid[newRow][newCol] < 3) {
                 append(list, 1, newRow, newCol, word);
                 return 1; // Found and appended
             }
