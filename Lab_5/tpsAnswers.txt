@@ -1,0 +1,34 @@
+TPS
+
+TPS 1.
+-------------------------------
+1. MARS stands for; MIPS Assembly and Runtime Simulator
+2. Okay Done
+3.Downloaded
+4.Downloaded And Understood .asm and .s are equivelent
+5.
+    a. You gotta load an assembly file through a really old ass file explorer menu
+    b. you hit assemble file and clear current breakpoints
+    c. you use the arrow keys to scan through your code.
+    d. You can't run your code before assembling it, it defeats the whole purpose of what we are doing and what MIPS is.
+    e. Arrow Keys to run it line by line.
+    f. you gotta rewind it like an old casset (coughs dust)
+6. Example Has been UnderStood
+
+
+
+End 1 -------------
+
+TPS 2. 
+----------------------------------
+
+1. .data makrs the data segment of the program
+    vars const, strings and arrays
+
+    .word is used inside the .data section to allocate one or more 32 bit words in memory
+
+    .text marks the text segment of the program - The actual executable instructions. what the cpu runs
+
+    
+
+------------------------------------
