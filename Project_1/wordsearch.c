@@ -176,25 +176,38 @@ void print_int_array(int** arr, int size) {
 
 // Search in all 8 directions from the given position
 int search_from_position(char** arr, char* word, int row, int col) {
-    for(int k = 0; k < 3; k++) {
-        for(int l = 0; l < 3; l++) {
-            if(k == 1 && l == 1) {
-                continue; // Skip the center position (0,0)
-            }
-            // Offsets for 3x3 grid -- handled by nested loops
-            int newRow = row + (k - 1);
-            int newCol = col + (l - 1);
-            // Check bounds and if the next letter matches
-            if(newRow >= 0 && newRow < bSize && newCol >= 0 && newCol < bSize &&
-               compareLetters(*(*(arr + newRow) + newCol), *(word + get_list_length(list))) &&
-               (get_last_node(list)->increment + 1) != -*(*(Possible_Paths + newRow) + newCol) &&
-               *(*(attemps_grid + newRow) + newCol) < 3) {
-                append(list, 1, newRow, newCol, word);
-                return 1; // Found and appended
+    int pass;
+    for (pass = 0; pass < 2; pass++) {           // pass 0: prefer revisits, pass 1: any valid
+        for (int k = 0; k < 3; k++) {
+            for (int l = 0; l < 3; l++) {
+                if (k == 1 && l == 1) continue;  // skip the current cell (center 3x3 neighborhood)
+
+                int newRow = row + (k - 1);
+                int newCol = col + (l - 1);
+                if (newRow < 0 || newRow >= bSize || newCol < 0 || newCol >= bSize)
+                    continue;
+
+                // next expected character in word (by current path length)
+                char nextCh = *(word + get_list_length(list));
+
+                // usual guards
+                if (!compareLetters(*(*(arr + newRow) + newCol), nextCh)) continue;
+                if ((get_last_node(list)->increment + 1) == -*(*(Possible_Paths + newRow) + newCol)) continue;
+                if (*(*(attemps_grid + newRow) + newCol) >= 3) continue;
+
+                // check if this cell has been used in the current path
+                Node *seen = check_child_at_location(list, newRow, newCol); // lets us see if we already used this cell
+
+                // pass 0 chooses a previously-used cell first (to produce "42" etc.)
+                // pass 1 accepts any valid cell
+                if ((pass == 0 && seen != NULL) || (pass == 1)) {
+                    append(list, 1, newRow, newCol, word);
+                    return 1;
+                }
             }
         }
     }
-    return 0; // Not found in any direction
+    return 0; // none found
 }
 
 void mark_path(int** Path_Array, LinkedList* list) {
@@ -255,6 +268,22 @@ void pretty_print_path(int** Path_Array, LinkedList* pathList) {
     free(Path_Array);
 }
 
+//Bonus: in the same matrix fix
+// Combine one found path into an existing matrix (overlay: 2,4,6 -> 246)
+void accumulate_path_into(int** Mat, LinkedList* pathList) {
+    Node* t = pathList->head;
+    while (t != NULL) {
+        int *cell = (*(Mat + t->row) + t->col);
+        if (*cell > 0) {
+            *cell = return_number_readyToPaste(*cell, t->increment);
+        } else {
+            *cell = t->increment;
+        }
+        t = t->next;
+    }
+}
+
+
 // bonus: print all distinct-start paths
 void searchPuzzle(char** arr, char* word) {
     Possible_Paths = create_empty_array(bSize);
@@ -303,18 +332,24 @@ void searchPuzzle(char** arr, char* word) {
     }
 
     if (results.count > 0) {
-        printf("Word found!\n");
-        printf("Printing the search path:\n");
-        for (int k = 0; k < results.count; ++k) {
-            int **tmp = NULL;
-            pretty_print_path(tmp, *(results.items + k));
-            if (k < results.count - 1) printf("\n");
-        }
-        paths_free(&results);
-    } else {
-        printf("Word not found!\n");
-        paths_free(&results);
+    printf("Word found!\n");
+    printf("Printing the search path:\n");
+
+    // build one combined matrix from all paths
+    int **combined = create_empty_array(bSize);
+    for (int k = 0; k < results.count; ++k) {
+        accumulate_path_into(combined, *(results.items + k));
     }
+    print_int_array(combined, bSize);
+
+    for (int r = 0; r < bSize; ++r) free(*(combined + r));
+    free(combined);
+    paths_free(&results);
+} else {
+    printf("Word not found!\n");
+    paths_free(&results);
+}
+
 
     for (int r = 0; r < bSize; ++r) free(*(Possible_Paths + r));
     free(Possible_Paths);
