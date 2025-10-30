@@ -28,6 +28,13 @@ TPS 2.
     .word is used inside the .data section to allocate one or more 32 bit words in memory
 
     .text marks the text segment of the program - The actual executable instructions. what the cpu runs
+2. Line 10 defines a branch called fib:  which then checks if registers are equal to t3 and the zero register, if so, break, if not, fib. 
+3. Line 15 jumps to the front of the branch of fib, basically creating a cycle. 
+4. You set a break point by hitting the bkpt check box to the side of the code in the execute tab.
+5. you just keep pressing the run current program button.
+6. you can find out the content of a register in the register tab. If you want to mess with a register, you have to assemble the code, go to the registers page and then set your values under value. 
+7. n is stored in the static data section which according to my MARS is found in 0x10010000
+8. syscall uses the v0 register to ask the Operating system to run operations, v1 asks to the os to print an integer at a0, v10 prompts the termination of the script.
 
     
 
