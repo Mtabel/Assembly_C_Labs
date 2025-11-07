@@ -1,0 +1,22 @@
+TPS Answers
+
+
+
+------------------------------------
+Tps 1. 
+1. The start of the Text Segment and Data segments are as follows (respectivliy)
+    -0x00400000
+    -0x10010000
+2. Source is what is actually readable to the user and is displayed in the text segment of the MIPS program.; the basic assembly language is thecodes found in the text segement of the data segment, this is the actual codes that will be computed into machine code. Or so I believe.
+3.Between Each word dress is 4 bytes, while between each adress that you can reach is one byte.'
+4. There are 8 addresses columns per address column. (Seems like we are talking about word addresses)
+5. each address has a diffrence of 4 bytes and each row has 8 columns, so each row is 32 bytes across
+6. you would go to the data segment, define m: <-(addressable point in mememory) .word <- define it as a word; 20 <- define word value...
+7. m is stored in the .data section with in offset of 4 from the first base adress of 0x10010000; thus 0x10010004
+8. we can intialize a string in the data section like this (str1: .asciiz "I love CSE31!")
+9. its actually being stored in 4 addresses since "!' over flows into 0x1001014, its all starts at 0x1001008.
+10. yes, its stored from highest to lowest right to left, it looks weird but I understand it.
+11. if $v0 equals 4, it will print the requested value of our string since it has a null terminating character.
+12. We are loading 13 into register 3, which will allow us to then load word into register t3 after. la is equivelent to addi $t3, $zero, n
+
+-------------------------------------
