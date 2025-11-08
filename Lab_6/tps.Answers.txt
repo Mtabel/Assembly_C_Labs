@@ -20,3 +20,7 @@ Tps 1.
 12. We are loading 13 into register 3, which will allow us to then load word into register t3 after. la is equivelent to addi $t3, $zero, n
 
 -------------------------------------
+
+TPS 2.
+1. we dont have an instruction for each inequality to make things simpler, we dont need to hard code more instructions
+2-8 - Implemented in Compare.s file
