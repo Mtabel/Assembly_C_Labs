@@ -1,0 +1,33 @@
+Tps
+
+Tps 1 ------------------
+1. a procedure is a named b lock of code that effects parts of the code but does not return a value.
+a function is a block of code that returns a value, and is often expect to prduce a result.
+a method operates on an objects state or invoked through the object.
+2. this is a statement not a question
+3.
+#include <stdio.h>
+
+int SUM(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int m = 10;
+    int n = 5;
+
+    int result = SUM(m, n);
+
+    printf("%d", result);
+
+    return 0;
+}
+
+4. 20 
+5. Yes we can just use j 
+6. I would assume j SUM
+7. Okay Got it! 
+8. 4194344 - Right after the jump so it doesnt keep comping forever.
+9. yes, it exicuted, okay sounds good.
+10. 4194344
+11. jal?
