@@ -10,17 +10,17 @@ z: .word 6
 .text
 MAIN:
     # map locals: x -> $s0, y -> $s1, z -> $s2
-    la   $s0, x        # x = 2
-    lw   $s0, 0($s0)
+    la   $s0, x        
+    lw   $s0, 0($s0)  # x = 2
     
-    la   $s1, y    # y = 4
-    lw   $s1, 0($s1)
+    la   $s1, y   
+    lw   $s1, 0($s1)  # y = 4
     
-    la   $s2, z        # z = 6
-    lw   $s2, 0($s2)
+    la   $s2, z        
+    lw   $s2, 0($s2)  # z = 6
     
 
-    # call foo(x,y,z)
+
     move $a0, $s0      # m = x
     move $a1, $s1      # n = y
     move $a2, $s2      # o = z
@@ -45,13 +45,12 @@ MAIN:
     syscall
 
 
-# -------------------------
 # FOO: int foo(int m,int n,int o)
 # locals: p -> $s0, q -> $s1
-# Prologue saves: $ra, $s0, $s1, and original $a0,$a1,$a2 on stack
-# -------------------------
+# Prologue save; $ra, $s0, $s1, and original $a0,$a1,$a2 on stack
+
 FOO:
-    # allocate stack and save registers (24 bytes)
+    # allocate
     addiu $sp, $sp, -24
     sw    $ra, 0($sp)
     sw    $s0, 4($sp)
@@ -60,7 +59,6 @@ FOO:
     sw    $a1, 16($sp)   # save original n
     sw    $a2, 20($sp)   # save original o
 
-    # -------- compute p = bar(m+o, n+o, m+n) --------
     lw    $t0, 12($sp)   # t0 = m
     lw    $t1, 16($sp)   # t1 = n
     lw    $t2, 20($sp)   # t2 = o
@@ -71,7 +69,6 @@ FOO:
     jal   BAR
     move  $s0, $v0       # p = v0
 
-    # -------- compute q = bar(m-o, n-m, n+n) --------
     # reload originals
     lw    $t0, 12($sp)   # t0 = m
     lw    $t1, 16($sp)   # t1 = n
@@ -83,7 +80,6 @@ FOO:
     jal   BAR
     move  $s1, $v0       # q = v0
 
-    # -------- compute p + q in a temp and print "p + q: <val>" --------
     addu  $t3, $s0, $s1  # t3 = p + q (use $t3 to preserve value across syscalls)
 
     # print "p + q: "
@@ -112,12 +108,10 @@ FOO:
     jr    $ra
 
 
-# -------------------------
 # BAR: int bar(int a,int b,int c)
 # returns (b - a) << c  (shift left by c bits)
 # Inputs: a -> $a0, b -> $a1, c -> $a2
 # Returns: value in $v0
-# -------------------------
 BAR:
     # compute b - a
     subu  $t0, $a1, $a0   # t0 = b - a
