@@ -1,19 +1,24 @@
 # proc3_mars_fixed.s
 .data
-msg_pq:    .asciiz "p + q: "
+prompt_1:    .asciiz "p + q: "
 newline:   .asciiz "\n"
 
-.text
-.globl MAIN
+x: .word 2
+y: .word 4
+z: .word 6
 
-# -------------------------
-# MAIN
-# -------------------------
+.text
 MAIN:
     # map locals: x -> $s0, y -> $s1, z -> $s2
-    li   $s0, 2        # x = 2
-    li   $s1, 4        # y = 4
-    li   $s2, 6        # z = 6
+    la   $s0, x        # x = 2
+    lw   $s0, 0($s0)
+    
+    la   $s1, y    # y = 4
+    lw   $s1, 0($s1)
+    
+    la   $s2, z        # z = 6
+    lw   $s2, 0($s2)
+    
 
     # call foo(x,y,z)
     move $a0, $s0      # m = x
@@ -82,7 +87,7 @@ FOO:
     addu  $t3, $s0, $s1  # t3 = p + q (use $t3 to preserve value across syscalls)
 
     # print "p + q: "
-    la    $a0, msg_pq
+    la    $a0, prompt_1
     li    $v0, 4
     syscall
 
