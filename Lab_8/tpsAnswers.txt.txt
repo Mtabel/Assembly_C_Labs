@@ -1,0 +1,27 @@
+TPS
+
+TPS 1.
+ 1. Understood
+ 2. Step Processed 
+ 3. Step Processed
+ 4. Step Processed
+ 5. Step Processed
+ 6. Step Processed
+
+
+TPS 2.
+1. Okay
+2. Okay
+3. Okay
+4. Okay
+5. Okay
+6. Okay
+7. Okay
+8. Okay
+9. Okay
+10. We need to send save a0 because it is used in multiple methods.
+11. Okay
+12. Okay
+13. Okay 
+14. Okay
+15. Uhhh I have no clue
