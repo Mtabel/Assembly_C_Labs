@@ -1,0 +1,68 @@
+.data
+
+#Global orgin list []
+orig_List: .space 100
+#Glob sorted []
+sorted_List: .space 100
+
+prompt0: .asciiz "Enter the number of assignments (between 1 and 25): "
+prompt1: .asciiz "Enter score: "
+
+
+.text
+MAIN:
+#int i is $s0
+#int numScores is $s1
+#int drop is #s3
+
+#while loop
+#enter number between 1-25 if not loop
+while:
+	li $v0, 4#load write string
+	la $a0, prompt0 #load a0 to prompt 0
+	syscall #Call write
+	
+	li $v0, 5#load read Int
+	syscall#writes to $v0
+	
+	#check if $a0 is less then 1 or greater than 10
+	li $t0, 1#set $t0 to 1
+	li $t1, 25#set $t1 to 25
+	# we will use these to make our inequalities
+	slt $t2, $v0, $t0	#Check $v0 < 1
+	bne $t2, $zero, while#Check $v0 < 1
+	
+	slt $t2, $t1, $v0 #Check $v0 > 25
+	bne $t2, $zero, while #Check $v0 > 25
+	
+	move $s1, $v0#if pass all set numScores equal to $v0
+	
+	
+#Beginning of for loop0 ----------------
+	# Done with t0-t1
+	#keep track of beginning of address
+	la $t0, orig_List
+	li $t1, 0
+for_loop0: #$t0 - tracks moving address, $t1 - tracks elements added
+	#ask user to input score
+	li $v0, 4 #Load write string
+	la $a0, prompt1 # Load prompt1 into $a0
+	syscall #call
+	#get score and add to list
+	li $v0, 5 #load command
+	syscall #call command
+	sw $v0, 0($t0) #store result in address + offset
+	#add offset for next element in list
+	addi $t0, $t0, 4 #address ofset to next possition
+	addi $t1, $t1, 1 #adds how many elements have been added (one at a time)
+	
+	#if number of elements added is less than total expected loop
+	slt $t2, $t1, $s1 #if current num < required num
+	bne $t2, $zero, for_loop0 #^ loop back ^
+	#else fall off to next funciton
+	
+	
+finish:
+	li $v0, 10
+	syscall
+	
