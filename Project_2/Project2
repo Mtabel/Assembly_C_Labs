@@ -61,7 +61,56 @@ for_loop0: #$t0 - tracks moving address, $t1 - tracks elements added
 	bne $t2, $zero, for_loop0 #^ loop back ^
 	#else fall off to next funciton
 	
+#Reset Vars to keep clean
+#Cosmetic and not efficient
+	#li $t0, 0 - 
+	li $t1, 0
+	li $t2, 0
+#---------------- Zeroed
+	#Setting up print check
+	addi $sp, $sp, -4 #save temp var
+	sw $t0, 0($sp) #storing temp ref of original list
 	
+	la $a0, orig_List#array I want to mess with
+	move $a1, $s1#move array size
+	jal printArray #Jump do your thing, and come back
+	#set to jump
+	#Return
+	lw $t0, 0($sp) #load what was in use before jump
+	
+	j finish
+	
+	
+printArray: 
+	#no need to save $ra since we will jump back once we are done messing with
+	#^the vars
+	
+	# have $a0 and $a1
+	#nothing to return
+	
+	move $t0, $a0#address of array
+	move $t1, $a1#elements in array
+	li $t2, 0 #acts as i to track for loop
+
+printArray_inner:
+	#do the work
+	li $v0, 1 #load read command
+	lw $a0, 0($t0)
+	syscall #read arg0
+	addi $a0, $a0, 4 #offset temp array by four to read next
+	
+	addi $t2, $t1, 1 # count times process has be done
+	
+	slt $t3, $t2, $t1 #check if i<arraysize
+	beq $t3, $zero, printArray_inner #branch back to loop if ^
+	#else ET go home
+	
+	
+	
+	
+	jr $ra	
+
+
 finish:
 	li $v0, 10
 	syscall
