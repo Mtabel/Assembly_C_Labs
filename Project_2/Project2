@@ -95,14 +95,14 @@ printArray:
 printArray_inner:
 	#do the work
 	li $v0, 1 #load read command
-	lw $a0, 0($t0)
+	lw $a0, 0($a0)
 	syscall #read arg0
 	addi $a0, $a0, 4 #offset temp array by four to read next
 	
-	addi $t2, $t1, 1 # count times process has be done
+	addi $t2, $t2, 1 # count times process has be done
 	
 	slt $t3, $t2, $t1 #check if i<arraysize
-	beq $t3, $zero, printArray_inner #branch back to loop if ^
+	bne $t3, $zero, printArray_inner #branch back to loop if ^
 	#else ET go home
 	
 	
