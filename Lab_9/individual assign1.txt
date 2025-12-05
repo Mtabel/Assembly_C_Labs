@@ -1,0 +1,90 @@
+
+Line#7
+addi $s0, $zero, -15
+
+a. Type I – 4 fields – opcode ; rs ; rt ; immediate
+b. addi opcode = 0x08
+rs = $zero → 0x00
+rt = $s0 → 0x10
+immediate = -15 → signed 16-bit = 0xFFF1
+
+Binary: 00100000000100001111111111110001
+
+hex: 0x2010FFF1
+
+Line#14
+
+slt $t0, $s0, $s1
+a. R-type – opcode rs rt rd shamt funct
+b. opcode = 0x00
+rs = $s0 = 16 → 0x10
+rt = $s1 = 17 → 0x11
+rd = $t0 = 8 → 0x08
+shamt = 0x00
+funct for slt = 0x2A
+
+c. fields (binary):
+
+opcode = 000000
+rs     = 10000
+rt     = 10001
+rd     = 01000
+shamt  = 00000
+funct  = 101010
+
+
+full binary:
+00000010000100010100000000101010
+
+hex: 0x0211402A
+slt $t0, $s0, $s1
+
+Line #17
+
+beq $t0, $zero, LEEQ
+a. I-type, 4 fields
+b. opcode = 0x04 (beq)
+rs = $t0 = 8 → 0x08
+rt = $zero = 0 → 0x00
+immediate = 0x0005
+
+c. fields (binary):
+
+opcode : 000100
+rs     : 01000
+rt     : 00000
+immediate : 0000000000000101
+
+
+full binary:
+00010001000000000000000000000101
+
+hex: 0x11000005
+I am off by one?!
+
+
+
+j GRT
+
+Instruction at 0x00400018
+Label GRT: is at 0x0040001C
+
+a. J-type – 2 fields – opcode ; address
+b. opcode for j = 0x02
+c. label GRT → address 0x0040001C
+d. how address fits in J-type:
+
+Jump uses 26 bits for target
+
+real address = upper 4 bits from PC+4, then (addr_field << 2)
+
+store bits [27:2] of target = 0x0040001C >> 2 = 0x00100007
+
+26-bit binary:
+00010000000000000000000111
+
+e. full binary machine code:
+opcode (000010) + address field
+00001000010000000000000000000111
+
+hex: 0x08100007

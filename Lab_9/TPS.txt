@@ -1,0 +1,53 @@
+TPS
+
+TPS 1 
+1. Downloaded'
+2.Loaded
+3.Okay
+4.32 bits
+5. -three types of instruction formats
+    - R type -> add, subi
+    -I-type -> addi, lw, sw, beq
+    -J-type -> j, jal
+6.
+a. Type I - 4 fields - opcode ; rs ; rt ; immediate
+b. addi in hex - 0x08
+    rs is register zero - thus 0x00 in hex
+c. opcode : 001000
+    rs = 00000
+    rt = 10000
+    immediate = 0000 0000 0001 1001
+    0010 0000 0001 0000 0000 0000 0001 1001
+    or 0x20100019
+
+7.
+a. 0x0230402A - 0000 0010 0011 0000 0100 0000 0010 1010 
+b. R-type - I can tell since the opcode field is 000000
+six fields will be in use
+names are opcode rs rt rd shamt funct
+c. 
+opcode = 000000
+rs     = 10001
+rt     = 00000
+rd     = 01000
+shamt  = 00000
+funct  = 101010
+
+d. the func is 0x2A so the operation is : slt rd, rs, rt
+rs = 17 or $s1 
+rt = 0 or $s0
+rd = 8 or $t0
+
+e. the instruction should then be slt $t0, $s1, $s0
+yes this matches
+
+9.
+a. J-type - 2 fields - opcode ; address
+b. opcode for j in hex = 0x02
+c. instruction jumps to label GREQ located at address 0x00400018
+d. address field is 26 bits
+we remove the lowest 2 bits since they are always 00 due to word alignment
+the upper 4 bits come from the pc
+thust the binary value of the 266 bit address field becomes 00000100000000000000000110
+e. thus the machine code is 00001000000100000000000000000110
+hex = 0x0810000c
