@@ -26,57 +26,61 @@ main:
     j end
 
 
-# recursion(m)
 recursion:
-    addi $sp, $sp, -12      # stack frame
-    sw $ra, 8($sp)          # save return address
-    sw $a0, 4($sp)          # save m
+    addi $sp, $sp, -16         # create stack frame
+    sw $ra, 12($sp)            # save return address
+    sw $a0, 8($sp)             # save argument m
 
-    lw  $t0, 4($sp)         # t0 = m
+    lw $t0, 8($sp)             # load m into t0
 
-    # Base case: m == -1  ? return 1
-    li $t1, -1
+    li $t1, -1                 # check m == -1
     beq $t0, $t1, base_minus_one
 
-    # Base case: m == 0 ? return 3
-    li $t1, 0
-    beq $t0, $t1, base_zero
+    li $t1, -2                 # check m == -2
+    beq $t0, $t1, base_minus_two
+
+    li $t1, -2                 # if m < -2
+    blt $t0, $t1, base_less_than_minus_two
 
 
-    # Recursive case: rec(m-2) + rec(m-1)
+    # recursive case: rec(m-3)
+    addi $a0, $t0, -3          # prepare argument m-3
+    jal recursion              # call recursion(m-3)
+    sw $v0, 4($sp)             # save rec(m-3)
 
-    # ---- First call: recursion(m - 2) ----
-    addi $a0, $t0, -2
-    jal recursion
-    sw $v0, 0($sp)          # save rec(m-2)
 
-    # ---- Second call: recursion(m - 1) ----
-    lw $a0, 4($sp)          # restore original m
-    addi $a0, $a0, -1
-    jal recursion
+    #recursive case: rec(m-2)
+    lw $a0, 8($sp)             # restore original m
+    addi $a0, $a0, -2          # compute m-2
+    jal recursion              # call recursion(m-2)
 
-    # combine results
-    lw $t1, 0($sp)          # rec(m-2)
-    addu $v0, $v0, $t1      # v0 = rec(m-1) + rec(m-2)
+    # combine: rec(m-3) + m + rec(m-2)
+    lw $t1, 4($sp)             # rec(m-3)
+    lw $t2, 8($sp)             # m
+    addu $v0, $v0, $t1         # rec(m-2) + rec(m-3)
+    addu $v0, $v0, $t2         # + m
     j end_recur
 
 
-# Base return values
+#base cases
 base_minus_one:
-    li $v0, 1
+    li $v0, 3                  # return 3
     j end_recur
 
-base_zero:
-    li $v0, 3
+base_minus_two:
+    li $v0, 1                  # return 1
+    j end_recur
+
+base_less_than_minus_two:
+    li $v0, 2                  # return 2
     j end_recur
 
 
-# function epilogue
+# end recursion
 end_recur:
-    lw $ra, 8($sp)
-    addi $sp, $sp, 12
-    jr $ra
-
+    lw $ra, 12($sp)            # restore return address
+    addi $sp, $sp, 16          # destroy stack frame
+    jr $ra                     # return to caller
 
 # End of program
 end:
