@@ -9,6 +9,8 @@ str2: .asciiz "Original scores: "
 str3: .asciiz "Sorted scores (in descending order): "
 str4: .asciiz "Enter the number of (lowest) scores to drop: "
 str5: .asciiz "Average (rounded down) with dropped scores removed: "
+space: .asciiz " "
+newline: .asciiz "\n"
 
 .text 
 
@@ -89,8 +91,41 @@ end:	lw $ra, 0($sp)
 # printList takes in an array and its size as arguments. 
 # It prints all the elements in one line with a newline at the end.
 printArray:
-	# Your implementation of printList here	
 
+	# Your implementation of printList here	
+	#arg one is array
+	#arg two is size
+	li $t0, 0
+	
+	move $t0, $a0#address of array
+	move $t4, $t0#Keep carbon Copy of array
+	move $t1, $a1#elements in array
+	li $t2, 0 #acts as i to track for loop
+printArray_inner:
+	#do the work
+	
+	#print space
+	li $v0, 4 #load read string command
+	la $a0, space #load string to print
+	syscall #execute string
+	
+	#print number
+	li $v0, 1 #load read command
+	lw $a0, 0($t0)
+	syscall #read arg0
+	addi $t0, $t0, 4 #offset temp array by four to read next
+	addi $t2, $t2, 1 # count times process has be done
+	
+	slt $t3, $t2, $t1 #check if i<arraysize
+	bne $t3, $zero, printArray_inner #branch back to loop if ^
+	#else ET go home
+	
+	#print newline
+	li $v0, 4 #load read string command
+	la $a0, newline #load string to print
+	syscall #execute string
+	
+	
 	jr $ra
 	
 	
