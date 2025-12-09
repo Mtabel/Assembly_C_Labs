@@ -80,14 +80,14 @@ loop_in:
 	jal calcSum	# Call calcSum to RECURSIVELY compute the sum of scores that are not dropped
 	
 	# Your code here to compute average and print it (you may also end up having some code here to help 
-	#---------------------------------
+	#-------------For Testing Only--------------------
 	#print sum for now
 	move $a0, $v0
 	#print number
 	li $v0, 1 #load read command
 	#lw $a0, 0($t0)
 	syscall #read arg0
-	
+	#--------------------------------
 	# handle the case when number of (lowest) scores to drop equals the number of scores
 	
 end:	lw $ra, 0($sp)
@@ -141,7 +141,45 @@ printArray_inner:
 # It performs SELECTION sort in descending order and populates the sorted array
 selSort:
 	# Your implementation of selSort here
+	move $t6, $s1 # $s1 = original move to $t7
+	move $t7, $s2# $s2 = sorted move to $t8
 	
+	#Label Temps to desired variables
+	#i = $t0
+	#j = $t1
+	#temp = $t2
+	move $t3, $s0#Max Index = $s0 move it to $t3
+	
+	#for (int i = 0; i < len; ++i)
+	li $t0, 0
+setloop:
+
+	lw $t5, 0($t6) # load value requested to copy over
+	sw $t5, 0($t7) # store loaded value into requested location
+	
+	addi $t6, $t6, 4 #increment temp address
+	addi $t7, $t7, 4 #increment temp address
+	
+	
+
+	addi $t0, $t0, 1
+	slt $t4, $t0, $t3
+	bne $t4, $zero, setloop
+	#branch back to loop if i < max
+	#set elements
+	
+
+firstloop:
+
+secondloop:
+
+	
+
+	
+	
+	
+	
+	# Reset all temps at end
 	jr $ra
 	
 	
