@@ -32,7 +32,15 @@ main:
 	li $v0, 5	# Read the number of scores from user
 	syscall
 	
+	
 	# Your code here to handle invalid number of scores (can't be less than 1 or greater than 25)
+	slti $t0, $v0, 1      #if less or equal to 0
+	bne  $t0, $zero, main
+
+	li $t1, 25
+	slt $t0, $t1, $v0 #more than num of scores logic
+	bne $t0, $zero, main
+	
 	
 	move $s0, $v0	# $s0 = numScores
 	move $t0, $0
@@ -80,16 +88,6 @@ comeback:
 	slt $t0, $v0, $zero   #less than logic zero logic
 	bne $t0, $zero, comeback
 
-	
-	#check if drop equals zero
-	#if does $s4 equals 1 and skip to cont
-	slt $t0, $v0, $zero#equal logic
-	slt $t1, $zero, $v0
-	or $t2, $t0, $t1
-	beq $t2, $zero, equalszero
-	
-	
-	
 	slt $t0, $s0, $v0 #more than num of scores logic
 	bne $t0, $zero, comeback
 	
@@ -98,7 +96,7 @@ comeback:
 	or $t2, $t0, $t1
 	beq $t2, $zero, equaldrop
 	#End of conditionals
-	move $s4, $v0#load son up as $s4 for later tampering
+	sub $s4, $s0, $v0#load son up as $s4 for later tampering
 	     
 	#-------- Leave this guy alone
 cont:
@@ -134,12 +132,7 @@ li $v0, 4 #load command write string
 la $a0, str6 # load string
 syscall #fire
 
-j end #swish
-
-equalszero:
-	li $s4, 1#set s4 to 1
-	
-j cont	
+j end #swish	
 		
 #end--------	
 # printList takes in an array and its size as arguments. 
