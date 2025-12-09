@@ -76,12 +76,11 @@ loop_in:
 	
 	move $a1, $v0
 	sub $a1, $s0, $a1	# numScores - drop
-	move $a0, $s1 # Tabel Made: Remove latter
-	#move $a0, $s2 
+	move $a0, $s2 
 	jal calcSum	# Call calcSum to RECURSIVELY compute the sum of scores that are not dropped
 	
 	# Your code here to compute average and print it (you may also end up having some code here to help 
-	
+	#---------------------------------
 	#print sum for now
 	move $a0, $v0
 	#print number
