@@ -9,6 +9,7 @@ str2: .asciiz "Original scores: "
 str3: .asciiz "Sorted scores (in descending order): "
 str4: .asciiz "Enter the number of (lowest) scores to drop: "
 str5: .asciiz "Average (rounded down) with dropped scores removed: "
+str6: .asciiz "All scores dropped!"
 space: .asciiz " "
 newline: .asciiz "\n"
 
@@ -64,6 +65,7 @@ loop_in:
 	move $a0, $s2	# More efficient than la $a0, sorted
 	jal printArray	# Print sorted scores
 	
+comeback:
 	li $v0, 4 
 	la $a0, str4 
 	syscall 
@@ -72,22 +74,52 @@ loop_in:
 	
 	# Your code here to handle invalid number of (lowest) scores to drop (can't be less than 0, or 
 	# greater than the number of scores). Also, handle the case when number of (lowest) scores to drop 
-	# equals the number of scores. 
+	# equals the number of scores.
 	
+	 
+	slt $t0, $v0, $zero   #less than logic zero logic
+	bne $t0, $zero, comeback
+
+	
+	#check if drop equals zero
+	#if does $s4 equals 1 and skip to cont
+	slt $t0, $v0, $zero#equal logic
+	slt $t1, $zero, $v0
+	or $t2, $t0, $t1
+	beq $t2, $zero, equalszero
+	
+	
+	
+	slt $t0, $s0, $v0 #more than num of scores logic
+	bne $t0, $zero, comeback
+	
+	slt $t0, $v0, $s0#equal logic
+	slt $t1, $s0, $v0
+	or $t2, $t0, $t1
+	beq $t2, $zero, equaldrop
+	#End of conditionals
+	move $s4, $v0#load son up as $s4 for later tampering
+	     
+	#-------- Leave this guy alone
+cont:
 	move $a1, $v0
 	sub $a1, $s0, $a1	# numScores - drop
 	move $a0, $s2 
 	jal calcSum	# Call calcSum to RECURSIVELY compute the sum of scores that are not dropped
-	
+	move $s5, $v0
 	# Your code here to compute average and print it (you may also end up having some code here to help 
-	#-------------For Testing Only--------------------
-	#print sum for now
-	move $a0, $v0
-	#print number
-	li $v0, 1 #load read command
-	#lw $a0, 0($t0)
-	syscall #read arg0
-	#--------------------------------
+	#print string
+	li $v0, 4 #load command write string
+	la $a0, str5 # load string
+	syscall #fire
+	
+	div $s5, $s4
+	mflo $a0 #laod final answer
+	li $v0, 1 #load command write int
+	syscall #fire
+	#W
+	
+	
 	# handle the case when number of (lowest) scores to drop equals the number of scores
 	
 end:	lw $ra, 0($sp)
@@ -95,7 +127,21 @@ end:	lw $ra, 0($sp)
 	li $v0, 10 
 	syscall
 	
+equaldrop:
+#say that shit equals through syscal then end program
+
+li $v0, 4 #load command write string
+la $a0, str6 # load string
+syscall #fire
+
+j end #swish
+
+equalszero:
+	li $s4, 1#set s4 to 1
 	
+j cont	
+		
+#end--------	
 # printList takes in an array and its size as arguments. 
 # It prints all the elements in one line with a newline at the end.
 printArray:
@@ -282,7 +328,9 @@ calcSum: # Your implementation of calcSum here
 	
 	
 	#epi log ----
-	sll $t0, $a1, 2 #mutiply len-1 by 4 to get size in memory
+	addi $t0, $a1, -1   # len - 1
+	sll  $t0, $t0, 2 #mutiply len-1 by 4 to get size in memory
+	#sll $t0, $a1, 2 #mutiply len-1 by 4 to get size in memory
 	add $t1, $a0, $t0 #add len-1 to address of arr[len-1] to get location of last element in array
 	lw $t2, 0($t1) #load the element of that location and hold it temporarily
 	add $v0, $v0, $t2#add it to the recursive sum, in this case $v0 which will pass down to each recursive call like the tithe bowl at church.
