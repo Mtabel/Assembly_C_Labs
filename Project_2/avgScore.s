@@ -148,7 +148,8 @@ selSort:
 	#i = $t0
 	#j = $t1
 	#temp = $t2
-	move $t3, $s0#Max Index = $s0 move it to $t3
+	move $t3, $s0#len = $s0 move it to $t3
+	
 	
 	#for (int i = 0; i < len; ++i)
 	li $t0, 0
@@ -163,24 +164,92 @@ setloop:
 	
 
 	addi $t0, $t0, 1
-	slt $t4, $t0, $t3
-	bne $t4, $zero, setloop
+	slt $t4, $t0, $t3 # if less set $t4 to 1
+	bne $t4, $zero, setloop #if less; branch
 	#branch back to loop if i < max
 	#set elements
 	
-
-firstloop:
-
-secondloop:
-
+	li $t6, 0 #reset temps to make it look good at break points
+	li $t7, 0 #clean up^
+	
 	
 
+	li $t0, 0 #i = $t0
+	li $t1, 0 #j = $t1
+	#temp = 	     $t2
+	#len = $s0 or  $t3
+	#max val index $t4
+	move $t5, $s2# $s2 = sorted move to $t5
+	#move $s3, $s2# store copy for moving through
+firstloop:#i zero at start
+	#I's for loop
+	
+	move $t4, $t0#max = i
+	
+	addi $t1, $t0, 1
+secondloop: #J's for loop
+	
+	#find offset for array needed
+	sll $t6, $t1, 2#----Multiply j by 4
+	add $t6, $t6, $s2#----add value found to copy
+	lw $s3, 0($t6) #save value into save register
+	#load j val
+	sll $t6, $t4, 2#----Multiply j by 4
+	add $t6, $t6, $s2#----add value found to copy
+	lw $s4, 0($t6) #save value into save register
+	
+	#we have j and max: now we need to run logic
+	#if sorted j val > sorted max val else pass
+	slt $t6, $s4, $s3
+	beq $t6, $zero, pass
+	move $t4, $t1 #max = j
+	
+pass:
+	
+	addi $t1, $t1, 1
+	subi $t7, $t3, 1#$t7 = len - 1
+	#secondloop conditional release
+	slt $t6, $t1, $t3
+	bne $t6, $zero, secondloop
+	
+	#temp = sorted[maxIndex
+	sll $t6, $t4, 2#----Multiply max by 4
+	add $t6, $t6, $s2#----add value found to copy
+	move $t7, $t6 #address of max ----<>
+	lw $s3, 0($t6) #save value into save register
+	move $t2, $s3
+	#sorted[max] = sorted[i
+	sll $t6, $t0, 2#----Multiply i by 4
+	add $t6, $t6, $s2#----add value found to copy
+	move $t8, $t6 #save address of sort i ----<>
+	lw $s4, 0($t6) #save value into save register
+	sw $s4, 0($t7) #completed step
+	#sorted[i = temp
+	sw $t2, 0($t8)
 	
 	
 	
-	
+	addi $t0, $t0, 1
+	#first loop conditional release
+	slt $t6, $t0, $t3
+	bne $t6, $zero, firstloop
 	# Reset all temps at end
-	jr $ra
+	li $s3, 0 #reset regs
+	li $s4, 0 #reset regs
+	
+	#reset all temps since it makes it clean:
+	li $t0, 0
+	li $t1, 0
+	li $t2, 0
+	li $t3, 0
+	li $t4, 0
+	li $t5, 0
+	li $t6, 0
+	li $t7, 0
+	li $t8, 0
+	li $t9, 0
+	
+	jr $ra # GTFO
 	
 	
 # calcSum takes in an array and its size as arguments.
