@@ -76,10 +76,19 @@ loop_in:
 	
 	move $a1, $v0
 	sub $a1, $s0, $a1	# numScores - drop
-	move $a0, $s2
+	move $a0, $s1 # Tabel Made: Remove latter
+	#move $a0, $s2 
 	jal calcSum	# Call calcSum to RECURSIVELY compute the sum of scores that are not dropped
 	
 	# Your code here to compute average and print it (you may also end up having some code here to help 
+	
+	#print sum for now
+	move $a0, $v0
+	#print number
+	li $v0, 1 #load read command
+	#lw $a0, 0($t0)
+	syscall #read arg0
+	
 	# handle the case when number of (lowest) scores to drop equals the number of scores
 	
 end:	lw $ra, 0($sp)
@@ -140,8 +149,47 @@ selSort:
 # calcSum takes in an array and its size as arguments.
 # It RECURSIVELY computes and returns the sum of elements in the array.
 # Note: you MUST NOT use iterative approach in this function.
-calcSum:
-	# Your implementation of calcSum here
+calcSum: # Your implementation of calcSum here
+	#arg 0 is array
+	#arg 1 is len
+	#prolog
+	addi $sp, $sp, -8 #add space on stack for whats to come
+	sw $ra, 4($sp) #store return address on top of stack so ET can go home
+	sw $a1, 0($sp) #store len for future
+	#prolog fin-----
 	
-	jr $ra
+	
+
+	
+	
+#Base Case check
+	#if length is less then or equal to 0 just jr $ra
+	slt $t0, $a1, $zero
+	bne $t0, $zero, basecase
+	#else cont.
+	
+	#Recursive call seg
+	addi $a1, $a1, -1#reduce length by 1
+	jal calcSum#jump to call and return
+	lw $a1, 0($sp)#restore the length
+	lw $ra, 4($sp)#restore return address
+	
+	
+	#epi log ----
+	sll $t0, $a1, 2 #mutiply len-1 by 4 to get size in memory
+	add $t1, $a0, $t0 #add len-1 to address of arr[len-1] to get location of last element in array
+	lw $t2, 0($t1) #load the element of that location and hold it temporarily
+	add $v0, $v0, $t2#add it to the recursive sum, in this case $v0 which will pass down to each recursive call like the tithe bowl at church.
+	
+	addi $sp, $sp, 8#Reset stack frame
+	#epi finish ----- 
+	
+	
+	jr $ra #jump ship back to main function
+basecase:
+	#base case reached of len <= 0
+	li $v0, 0#return 0
+	addi $sp, $sp, 8#set back stack
+	jr $ra #return to home
+	
 	
