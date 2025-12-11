@@ -10,6 +10,8 @@ str3: .asciiz "Sorted scores (in descending order): "
 str4: .asciiz "Enter the number of (lowest) scores to drop: "
 str5: .asciiz "Average (rounded down) with dropped scores removed: "
 str6: .asciiz "All scores dropped!"
+#Bonus string
+str_drop: .asciiz "Dropped scores: "
 space: .asciiz " "
 newline: .asciiz "\n"
 
@@ -67,10 +69,12 @@ loop_in:
 	move $a0, $s1	# More efficient than la $a0, orig
 	move $a1, $s0
 	jal printArray	# Print original scores
+	
 	li $v0, 4 
 	la $a0, str3 
 	syscall 
 	move $a0, $s2	# More efficient than la $a0, sorted
+	move $a1, $s0
 	jal printArray	# Print sorted scores
 	
 comeback:
@@ -91,12 +95,13 @@ comeback:
 	slt $t0, $s0, $v0 #more than num of scores logic
 	bne $t0, $zero, comeback
 	
-	slt $t0, $v0, $s0#equal logic
+	slt $t0, $v0, $s0 #equal logic
 	slt $t1, $s0, $v0
 	or $t2, $t0, $t1
 	beq $t2, $zero, equaldrop
 	#End of conditionals
-	sub $s4, $s0, $v0#load son up as $s4 for later tampering
+	
+	sub $s4, $s0, $v0 #load son up as $s4 for later tampering
 	     
 	#-------- Leave this guy alone
 cont:
@@ -106,6 +111,47 @@ cont:
 	jal calcSum	# Call calcSum to RECURSIVELY compute the sum of scores that are not dropped
 	move $s5, $v0
 	# Your code here to compute average and print it (you may also end up having some code here to help 
+	
+	#Bonus part
+	# print "Dropped scores: "
+	li $v0, 4	# syscall 4 = print string
+	la $a0, str_drop	# load address of "Dropped scores: "
+	syscall		 # print it
+	
+	#number dropped = s0 - s4
+	sub $t2, $s0, $s4	# t2 = numberDropped = totalScores - numberKept
+	
+	#address of first dropped element in sorted array
+	sll $t4, $s4, 2		# t4 = numberKept * 4 (byte offset)
+	add $t3, $s2, $t4	 # t3 = &sorted[numberKept] (start of dropped scores)
+	
+	li $t5, 0	# t5 = loop counter = 0
+drop_loop:
+	beq $t5, $t2, drop_done		# if counter == numberDropped → exit loop
+	
+	#print space
+	li $v0, 4	# syscall 4 = print string
+	la $a0, space	# space = " "
+	syscall		# print space
+	
+	#print dropped value
+	li $v0, 1	# syscall 1 = print integer
+	lw $a0, 0($t3)	# load dropped score into $a0
+	syscall		# print the integer
+
+	
+	addi $t3, $t3, 4	 # move to next dropped score (advance by 4 bytes)
+	addi $t5, $t5, 1	# increment loop counter
+	j drop_loop	# repeat loop
+
+drop_done:
+	# print newline
+	li $v0, 4	# syscall 4 = print string
+	la $a0, newline	# load newline ("\n")
+	syscall		# print newline
+	
+	#End of bonus
+	
 	#print string
 	li $v0, 4 #load command write string
 	la $a0, str5 # load string
@@ -114,13 +160,13 @@ cont:
 	div $s5, $s4
 	mflo $a0 #laod final answer
 	li $v0, 1 #load command write int
-	syscall #fire
-	#W
+	syscall 
 	
 	
 	# handle the case when number of (lowest) scores to drop equals the number of scores
 	
-end:	lw $ra, 0($sp)
+end:	
+	lw $ra, 0($sp)
 	addi $sp, $sp 4
 	li $v0, 10 
 	syscall
@@ -131,7 +177,6 @@ equaldrop:
 li $v0, 4 #load command write string
 la $a0, str6 # load string
 syscall #fire
-
 j end #swish	
 		
 #end--------	
@@ -148,6 +193,7 @@ printArray:
 	move $t4, $t0#Keep carbon Copy of array
 	move $t1, $a1#elements in array
 	li $t2, 0 #acts as i to track for loop
+	
 printArray_inner:
 	#do the work
 	
